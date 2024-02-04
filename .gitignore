@@ -5,6 +5,13 @@ __pycache__/
 
 # C extensions
 *.so
+*.so
+*.DS_Store
+*.pyc
+
+.pytest*
+__py*__
+.benchmarks
 
 # Distribution / packaging
 .Python

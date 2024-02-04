@@ -1,0 +1,15 @@
+version: '3'
+
+tasks:
+  python-dev:
+    cmds:
+    - maturin develop
+    - python scripts/introspect_rt.py
+
+  build-python:
+    cmds:
+    - maturin build {{ .FLAGS }}
+
+  pytest:
+    cmds:
+    - pytest
