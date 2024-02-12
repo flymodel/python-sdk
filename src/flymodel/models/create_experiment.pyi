@@ -8,6 +8,11 @@ class CreateExperimentVariables:
 
     def __init__(self, experiment_name: str, model_version_id: int): ...
 
+class PartialCreateExperimentVariables:
+    experiment_name: str
+
+    def __init__(self, experiment_name: str): ...
+
 class Experiment:
     id: int
     name: str

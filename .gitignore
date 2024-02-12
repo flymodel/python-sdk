@@ -17,6 +17,8 @@ __py*__
 .Python
 build/
 develop-eggs/
+.mise.toml
+
 dist/
 downloads/
 eggs/

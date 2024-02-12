@@ -5,8 +5,9 @@ from flymodel import Client, models
 from .fixture import client
 
 
-@pytest.mark.asyncio
-async def test_create_experiment(client: Client):
+async def create_experiment_variables(
+    client: Client,
+) -> models.create_experiment.CreateExperimentVariables:
     model = models.create_model.CreateModelVariables(name="test_model", namespace=1)
     model = await client.create_model(model)
     version = models.create_model_version.CreateModelVersionVariables(
@@ -17,6 +18,12 @@ async def test_create_experiment(client: Client):
         experiment_name="my-experiment",
         model_version_id=version.create_model_version.id,
     )
+    return new
+
+
+@pytest.mark.asyncio
+async def test_create_experiment(client: Client):
+    new = await create_experiment_variables(client)
     resp = await client.create_experiment(new)
 
     exp = resp.create_experiment

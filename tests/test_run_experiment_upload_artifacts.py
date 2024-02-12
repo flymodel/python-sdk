@@ -4,12 +4,12 @@ from io import BytesIO
 import pytest
 from polars import DataFrame
 
-from flymodel.client import UploadExperimentArgs, UploadRequestParams
+from flymodel.client import PartialUploadExperimentArgs, UploadRequestParams
 from flymodel.experiment import Experiment
 from flymodel.models.enums import ArchiveCompression, ArchiveFormat
 
 from .fixture import client
-from .test_create_experiment import test_create_experiment as initial_experiment
+from .test_create_experiment import create_experiment_variables as initial_experiment
 
 
 def get_some_df():
@@ -25,30 +25,28 @@ def get_some_df():
 async def test_it(client):
     exp = await initial_experiment(client)
 
-    async with Experiment(client) as test:
-        args = UploadExperimentArgs(
-            experiment=exp.id,
-            params=UploadRequestParams(
-                artifact_name="abctest",
-                format=None,
+    async with Experiment(client, args=exp) as test:
+        args = PartialUploadExperimentArgs(
+            UploadRequestParams(
+                artifact_name="abc.txt",
+                format=ArchiveFormat("txt"),
                 encode=None,
             ),
         )
 
         resp = await test.save_artifact(args, b"okok")
 
-        assert resp.name == "abctest"
-        assert resp.experiment_id == exp.id
-        assert resp.version_id == exp.version_id
+        assert resp.name == "abc.txt"
+        assert resp.experiment_id == test.id
+        assert resp.version_id == test.experiment.version_id
 
         fits = get_some_df()
         bts = BytesIO()
         fits.write_ipc(bts)
 
-        args = UploadExperimentArgs(
-            experiment=exp.id,
-            params=UploadRequestParams(
-                artifact_name="abctest",
+        args = PartialUploadExperimentArgs(
+            UploadRequestParams(
+                artifact_name="abc.arrow",
                 format=ArchiveFormat("arrow"),
                 encode=ArchiveCompression("gzip"),
             ),

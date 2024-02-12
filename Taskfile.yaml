@@ -5,11 +5,25 @@ tasks:
     cmds:
     - maturin develop
     - python scripts/introspect_rt.py
+    - task: lint
 
   build-python:
     cmds:
     - maturin build {{ .FLAGS }}
 
-  pytest:
+  test:
+    env:
+      RUST_LOG: trace
     cmds:
     - pytest
+
+  bat:
+    cmds:
+    - task: python-dev
+    - task: test
+
+  lint:
+    cmds:
+    - isort .
+    - black .
+    - ruff .

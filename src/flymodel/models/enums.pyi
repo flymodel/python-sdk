@@ -1,8 +1,8 @@
-from enum import IntEnum
-
 __all__ = ["Lifecycle"]
 __doc__ = None
 __spec__ = None
+
+from enum import IntEnum
 
 class Lifecycle(IntEnum):
     Prod = 0
